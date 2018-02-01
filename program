@@ -1,0 +1,135 @@
+aufgabe 2a)
+
+import math
+
+import a_9_2_b as A9_2
+
+num_of_phi_calcs = 0
+
+
+def phi(t):
+    global num_of_phi_calcs
+    num_of_phi_calcs += 1
+
+    return (1 / math.sqrt(2 * math.pi)) * (math.e ** (-(t ** 2) / 2))
+
+
+def phi_int(x,  e, verbose=False):
+    global num_of_phi_calcs
+    num_of_phi_calcs += 1
+
+    '''
+    f: Funktion
+    e: Epsilon (Genauigkeit)
+    verbose: Ausgabe
+    ref: Referenzwert
+    '''
+    n = 1
+    while True:
+        acc_int = 0.5 + A9_2.S(phi, 0, x, 2 * n)
+        apr_int = 0.5 + A9_2.S(phi, 0, x, n)
+
+        if abs(acc_int - apr_int) < e:
+            if verbose:
+                print()
+            return acc_int
+
+        n += 1
+
+
+if __name__ == "__main__":
+    index_arr = []
+    val_arr = []
+    e_arr = []
+    error_arr = []
+    num_phi_arr = []
+
+    for i in range(10, 31):
+        e = 2 ** (-i)
+        val = phi_int(1, e, True, )
+
+        index_arr.append(i)
+        val_arr.append(val)
+        e_arr.append(e)
+        error_arr.append(abs(val - 0.84134474606854293))
+        num_phi_arr.append(num_of_phi_calcs)
+
+        print(f"i = {i}")
+        print(f"S(a, b, 2 * N) = {val}")
+        print(f"epsilon = {e}")
+        print(f"|S(a, b, 2 * N) - I| = Fehler = {val - 0.84134474606854293}")
+        print(f"phi calcs: {num_of_phi_calcs}")
+
+        num_of_phi_calcs = 0
+		
+		
+		
+		----------------------------------
+		
+		aufgabe 2b)
+		
+		
+		
+import a_14_2_a as A14_2a
+
+epsilon = 0.1
+num_of_newton_steps = 0
+
+
+def phi_int(t, e=epsilon):
+    return A14_2a.phi_int(t, e)
+
+
+def newton_step(f, f_abl, x_0, p):
+    global num_of_newton_steps
+    num_of_newton_steps += 1
+
+    return x_0 - ((f(x_0) - p) / f_abl(x_0))
+
+
+def newton(f, f_abl, p, e):
+    global epsilon
+    u = 0  # start value
+
+    epsilon = e/10
+
+    if (p <= 0 or p > 1):
+        return
+
+    while True:
+        u = newton_step(f, f_abl, u, p)
+
+        if abs(f(u) - p) < e:
+            return u
+
+
+if __name__ == "__main__":
+    index_arr = []
+    val_arr = []
+    e_arr = []
+    num_newt_arr = []
+    num_phi_arr = []
+    for i in range(10, 31):
+        e = 2 ** (-i)
+
+        val = newton(phi_int, A14_2a.phi, 0.95, e)
+
+        index_arr.append(i)
+        val_arr.append(val)
+        e_arr.append(e)
+        num_newt_arr.append(A14_2a.num_of_phi_calcs)
+        num_phi_arr.append(num_of_newton_steps)
+
+        print(f"i = {i}")
+        print(f"u = {val}")
+        print(f"e = {e}")
+        print(f"newton steps: {A14_2a.num_of_phi_calcs}")
+        print(f"phi calcs: {num_of_newton_steps}")
+        print()
+
+        num_of_newton_steps = 0
+        A14_2a.num_of_phi_calcs = 0
+		
+		------------------------------------
+		
+		
